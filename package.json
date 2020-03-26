@@ -1,5 +1,5 @@
 {
-  "name": "gcp-test",
+  "name": "google-cloud-grpc-issue",
   "private": true,
   "version": "1.0.0",
   "license": "MIT",
