@@ -208,11 +208,11 @@ This is a serious performance issue and there have been some similar reports, bu
 
 Our options at this point are:
 
-1. Switch all of our business logic and future applications away from Google Cloud
-2. switch all of our business logic to use REST versions of GCP APIs which would be really awkward to maintain and work with and is likely a non-starter
-3. Resolve this core issue and move on to more important things
+1. Switch all of our business logic and future applications away from Google Cloud.
+2. Switch all of our business logic to use REST versions of GCP APIs which would be really awkward to maintain and work with and is likely a non-starter.
+3. Resolve this core issue and move on to more important things.
 
-@Google we've done our part in breaking down as simple and clear of a repro example as possible. Please help us and other customers choose option #3.
+**@Google we've done our part in breaking down as simple and clear of a repro example as possible. Please help us and other customers choose option #3.**
 
 ## License
 
