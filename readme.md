@@ -200,7 +200,7 @@ Benchmark overall times range from **10-12s**. :cringe:
 
 ## Takeaways
 
-I would happily tradeoff slightly faster query times for **consistent query times** 10 times out of 10. The REST version especially when deployed to **serverless** is significantly more consistent and reasonable than the gRPC version with it not being uncommon for our end users to wait 10-30s for initial results which is absolutely unacceptable.
+I would happily tradeoff slightly slower query times for **consistent query times** 10 times out of 10. The REST version especially when deployed to **serverless** is significantly more consistent and reasonable than the gRPC version with it not being uncommon for our end users to wait 10-30s for initial results which is absolutely unacceptable.
 
 **This problem is compounded significantly by our serverless business logic using multiple Google APIs to handle requests (like Firestore + Logs), each of which has the same redundant slow initialization issue.**
 
