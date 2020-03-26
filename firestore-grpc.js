@@ -1,5 +1,6 @@
 const { Firestore } = require('@google-cloud/firestore')
 
+console.log('using gRPC via @google-cloud/firestore')
 const db = new Firestore()
 const CronJobs = db.collection('cron-jobs')
 

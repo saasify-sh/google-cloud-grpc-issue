@@ -1,6 +1,8 @@
 'use strict'
 
 const { google } = require('googleapis')
+
+console.log('using REST via googleapis')
 const firestore = google.firestore('v1')
 const adaptor = require('./adaptor')
 
