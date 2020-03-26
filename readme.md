@@ -4,11 +4,13 @@
 
 ## Problem Intro
 
-We're experiencing extremely slow initial query times (10s+) to all Google Cloud APIs using the latest Node.js SDKs **locally** (not on serverless). This initial query lapse is a huge and very noticeable issue when our business logic is run in serverless environments as well as locally every time our development server is hot reloaded resulting in a very, very poor end user experience.
+We're experiencing extremely slow initial query times (10s+) with all Google Cloud APIs using the latest Node.js SDKs **locally** and on **serverless**. This initial query lapse is unacceptable when our business logic is run in serverless environments as well as locally every time our development server is hot reloaded resulting in a very, very poor experience for our end users.
 
-Using the gRPC SDKs, the initial query time is consistently always **10-11s** and subsequent query times of around **80-150ms**.
+This problem is compounded even more when our business logic uses multiple Google APIs, each of which redundantly have the same 10s+ initialization times leading to some end user queries taking 30s+ in some not uncommon scenarios. **:cringe:**
 
-Using the REST APIs, the initial query time varies from 3s (rare) to an anverage of 300-600ms and then subsequent query times of around **150ms**.
+For a single GCP API, using gRPC, the initial query time is consistently always **10-11s** and subsequent query times of around **80-150ms** (via the official `@google-cloud` SDKs).
+
+For the same GCP API, using REST, the initial query time varies from 3s (rare) to an anverage of 300-600ms and then subsequent query times of around **150ms** (via the official / generic `googleapis` REST SDK).
 
 A few basic things:
 
@@ -22,13 +24,17 @@ The same pattern repros when our code is run in production from AWS Lambda, but 
 
 ## Setup
 
-All benchmarks below are run locally on a 2018 Macbook Pro using Node.js `v13.8.0` and yarn `1.22.0`.
+You'll need to setup a basic Google Firestore database, insert a few test documents, and change the database name (right now it's set to `cron-jobs`) and document IDs in the source to match your setup.
 
-You'll need to setup a basic Google Firestore database, insert a few test documents, and change the database name and document IDs in the source to match your documents.
+You'll also need to setup valid `GOOGLE_APPLICATION_CREDENTIALS` and `GOOGLE_PROJECT_ID` in `.env`.
 
 Super simple setup following a normal quick start type scenario.
 
 ## Benchmarks
+
+All benchmarks below are run locally on a 2018 Macbook Pro using Node.js `v13.8.0` and yarn `1.22.0`.
+
+You can run `benchmark-single-get.js` or `benchmark-multiple-get.js` and swap one line in the `require` statements to switch between REST and gRPC.
 
 ### Benchmark Single GET - REST
 
@@ -70,7 +76,7 @@ DaubZexsvlUE7beXCOEd: 10.542s
 main: 10.544s
 ```
 
-Benchmark times are very consistently **10-11s**.
+Benchmark times are very consistently **10-11s**. :cringe:
 
 ### Benchmark Multiple GET - REST
 
@@ -190,15 +196,15 @@ ncQYovHShkRWfIyVKZSy: 89.362ms
 main: 10.808s
 ```
 
-Benchmark overall times range from **10-12s**.
+Benchmark overall times range from **10-12s**. :cringe:
 
 ## Takeaways
 
-**I would tradeoff slightly faster execution time for consistent query times 10 times out of 10**. The REST version especially when deployed to **serverless** is significantly more consistent and reasonable than the gRPC version with our end users normally waiting 10-30s for results.
+I would happily tradeoff slightly faster query times for **consistent query times** 10 times out of 10. The REST version especially when deployed to **serverless** is significantly more consistent and reasonable than the gRPC version with it not being uncommon for our end users to wait 10-30s for initial results which is absolutely unacceptable.
 
 **This problem is compounded significantly by our serverless business logic using multiple Google APIs to handle requests (like Firestore + Logs), each of which having the same redundant slow initialization issue.**
 
-This is a serious performance issue and there have been some similar reports, but it's hard to believe that this hasn't been acknowledged as a fundamental weakness of Google Cloud, at least with the happy path on Node.js of using their official gRPC-based SDKs.
+This is a serious performance issue and there have been some similar reports, but it's hard to believe that this hasn't been acknowledged as a fundamental weakness of Google Cloud, at least with the happy path on Node.js using their official gRPC-based SDKs.
 
 Our options at this point are:
 
@@ -207,3 +213,7 @@ Our options at this point are:
 3. Resolve this core issue and move on to more important things
 
 @Google we've done our part in breaking down as simple and clear of a repro example as possible. Please help us and other customers choose option #3.
+
+## License
+
+MIT © [Saasify](https://saasify.sh)

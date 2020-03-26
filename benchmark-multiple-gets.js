@@ -3,8 +3,8 @@
 require('dotenv').config()
 
 // comment / uncomment these two lines to switch between REST and gRPC
-// const firestore = require('./firestore-googleapis')
-const firestore = require('./firestore-grpc')
+const firestore = require('./firestore-googleapis')
+// const firestore = require('./firestore-grpc')
 
 const ids = [
   'DaubZexsvlUE7beXCOEd',
